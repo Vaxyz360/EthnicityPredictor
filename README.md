@@ -4,3 +4,4 @@ App Description: Allow users to type in a name and get a list of ethnicities tha
 YouTube Video Link: 
 APIs: Nationalize.io API on https://apipheny.io/free-api/ 
 Contact Email: Contact both vprabhu@terpmail.umd.edu and rsunkara@terpmail.umd.edu
+Deployed on https://ethnicity-predictor.onrender.com
