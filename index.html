@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethnicity Predictor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Ethnicity Predictor</h1>
+    <form id="nameForm">
+        <label for="name">Enter Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="coolness">Did you think the Ethnicity Predictor was cool?</label>
+        <select id="coolness" name="coolness">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+        <label for="accuracy">How Accurate was it?</label>
+        <select id="accuracy" name="accuracy">
+            <option value="top_correct">The top country was correct</option>
+            <option value="one_correct">One of the countries was correct</option>
+            <option value="not_shown">The right country didn't show up</option>
+            <option value="unknown">I don't know the ethnicity</option>
+        </select>
+
+        <button type="button" id="predictEthnicity">Predict Ethnicity</button>
+
+        <p>After you use the tool and complete the form:</p>
+        <button type="submit" id="submitForm">Submit Form</button>
+        
+        <button type="button" onclick="window.location.href='results.html'">All form results</button>
+    </form>
+    <div id="ethnicityResults"></div>
+    <p>Refer to this link to see what country the 2-letter abbreviation corresponds to: 
+         <a href="https://www.iban.com/country-codes" target="_blank">Country Codes</a>
+     </p>
+    
+    <button type="button" id="clearEntries" style="margin-top: 50px;">Remove all form entries</button>
+    
+      <script>
+           document.getElementById('nameForm').addEventListener('submit', async (event) => {
+               event.preventDefault();
+               const name = document.getElementById('name').value;
+               const coolness = document.getElementById('coolness').value;
+               const accuracy = document.getElementById('accuracy').value;
+
+               console.log('Name:', name);
+               console.log('Coolness:', coolness);
+               console.log('Accuracy:', accuracy);
+
+               // Predict ethnicity
+               const response = await fetch(`/search?name=${encodeURIComponent(name)}`);
+               const data = await response.json();
+               console.log('Ethnicity Data:', data);
+               const resultsDiv = document.getElementById('ethnicityResults');
+               resultsDiv.innerHTML = `<h2>These countries may be ${data.name}'s ethnicity:</h2>`;
+               let tableContent = `<table><thead><tr><th>Country Abbreviation</th><th>Probability (%)</th></tr></thead><tbody>`;
+               data.country.forEach(country => {
+                   tableContent += `<tr><td>${country.country_id}</td><td>${(country.probability * 100).toFixed(2)}</td></tr>`;
+               });
+               tableContent += `</tbody></table>`;
+               resultsDiv.innerHTML += tableContent;
+
+               // Submit form data
+               await fetch('/api/submit', {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json'
+                   },
+                   body: JSON.stringify({ name, coolness, accuracy })
+               });
+           });
+       </script>
+       <script src="client.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Results</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>All Form Results</h1>
+    <div id="results"></div>
+    <a href="index.html">Back to Main Page</a>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/results')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Fetched Data:', data);
+                    let tableContent = `<table><thead><tr><th>Name</th><th>Thought It Was Cool?</th><th>Accuracy</th></tr></thead><tbody>`;
+                    data.forEach(entry => {
+                        console.log('Entry:', entry);
+                        let accuracyText;
+                        switch (entry.accuracy) {
+                            case 'top_correct':
+                                accuracyText = 'Top country was correct';
+                                break;
+                            case 'one_correct':
+                                accuracyText = 'Correct country shown';
+                                break;
+                            case 'not_shown':
+                                accuracyText = "Correct country wasn't shown";
+                                break;
+                            case 'unknown':
+                                accuracyText = "I don't know the ethnicity";
+                                break;
+                            default:
+                                accuracyText = entry.accuracy;
+                        }
+                        tableContent += `<tr><td>${entry.name}</td><td>${entry.coolness}</td><td>${accuracyText}</td></tr>`;
+                    });
+                    tableContent += '</tbody></table>';
+                    document.getElementById('results').innerHTML = tableContent;
+                })
+                .catch(error => console.error('Error fetching results:', error));
+        });
+    </script>
+</body>
+</html>

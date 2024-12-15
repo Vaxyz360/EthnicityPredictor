@@ -1,0 +1,22 @@
+{
+  "name": "nationality-predictor",
+  "version": "1.0.0",
+  "description": "A simple app to predict nationality based on a name using the Nationalize API.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongodb": "^6.12.0"
+  },
+  "keywords": [
+    "nationality",
+    "prediction",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC"
+}
